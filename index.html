@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Boutique - Marketplace</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="auth-nav">
+    <div id="userInfo" style="display: none;">
+        <span id="userName"></span>
+        <button id="logoutBtn">Déconnexion</button>
+    </div>
+    <button id="loginBtn">Se connecter avec Google</button>
+</nav>
+    <header>
+        <h1>Lordy Market🛒</h1>
+        <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Rechercher un produit (ex: iPhone, Chaussures...)" autocomplete="off">
+</div>
+        <a href="vendeur.html" class="nav-link">Vendre un produit➕</a>
+    </header>
+
+    <div id="productList"></div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

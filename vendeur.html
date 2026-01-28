@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Espace Vendeur</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <a href="index.html">← Retour à la boutique</a>
+        <h1>Espace Vendeur</h1>
+    </header>
+
+    <section id="admin-panel">
+        <form id="productForm">
+            <h2>Ajouter un nouvel article</h2>
+            <input type="text" id="name" placeholder="Nom du produit" required>
+            <input type="number" id="price" placeholder="Prix (gourdes)" required>
+            <textarea id="description" placeholder="Description complète"></textarea>
+            <label for="imageFile" style="color: var(--text-dim); font-size: 0.9rem;">Photo du produit</label>
+            <input type="file" id="imageFile" accept="image/*" required>
+            <input type="tel" id="phone" placeholder="Ton numero whatsapp" required>
+            <button type="submit">Mettre en vente</button>
+        </form>
+    </section>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
