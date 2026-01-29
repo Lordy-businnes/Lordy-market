@@ -1,9 +1,8 @@
 
-// À mettre au début de votre fichier
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider,} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 // 1. TA CONFIGURATION
 const firebaseConfig = {
   apiKey: "AIzaSyAm6n-l0r4uSRPZI4pnnUsufq2rGHqvEaM",
@@ -31,33 +30,42 @@ const productList = document.getElementById('productList');
 const productForm = document.getElementById('productForm');
 
 // --- 3. GESTION DE L'AUTHENTIFICATION ---
+window.signInWithGoogle = async () => {
+  try {
+    // Lance la redirection. Le code s'arrête ici temporairement.
+    await signInWithRedirect(auth, provider);
+  } catch (error) {
+    console.error("Erreur lors de la redirection initiale:", error.message);
+  }
+};
 
-loginBtn?.addEventListener('click', () => signInWithPopup(auth, provider));
-logoutBtn?.addEventListener('click', () => signOut(auth));
-
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        if(loginBtn) loginBtn.style.display = 'none';
-        if(userInfo) userInfo.style.display = 'flex';
-        if(userName) userName.innerText = user.displayName;
-    } else {
-        if(loginBtn) loginBtn.style.display = 'block';
-        if(userInfo) userInfo.style.display = 'none';
-        
-        // Sécurité : Rediriger si on tente de vendre sans être connecté
-        if (window.location.pathname.includes("vendeur.html")) {
-            alert("Connectez-vous avec Google pour accéder à l'espace vendeur !");
-            window.location.href = "index.html";
-        }
+// Fonction à appeler au chargement de la page pour vérifier le résultat de la redirection
+const handleRedirectResult = async () => {
+  try {
+    // Tente de récupérer le résultat si l'utilisateur vient d'être redirigé
+    const result = await getRedirectResult(auth);
+    if (result) {
+      // L'utilisateur est connecté avec succès après la redirection
+      const user = result.user;
+      console.log("Connexion réussie pour:", user.displayName);
+      alert(`Bienvenue, ${user.displayName} !`);
+      // Vous pouvez mettre à jour l'interface utilisateur ici
     }
-});
+  } catch (error) {
+    // Gérer les erreurs (ex: l'utilisateur a fermé la fenêtre avant de se connecter)
+    console.error("Erreur après redirection:", error.message);
+    alert(`Erreur de connexion : ${error.message}`);
+  }
+};
+
+
 
 // --- 4. AJOUT DE PRODUIT (PARTIE VENDEUR) ---
 
 if (productForm) {
     productForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         if (!auth.currentUser) {
             alert("Erreur : Vous devez être connecté !");
             return;
@@ -151,7 +159,7 @@ let allProducts = []; // Cette liste stocke tes produits pour la recherche
 
 if (list) {
     const q = query(productCollection, orderBy("createdAt", "desc"));
-    
+
     // On écoute Firebase
     onSnapshot(q, (snapshot) => {
         allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -163,7 +171,7 @@ if (list) {
 if (searchInput) {
     searchInput.addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
-        
+
         const filtered = allProducts.filter(p => {
             const name = (p.name || "").toLowerCase();
             const desc = (p.description || "").toLowerCase();
@@ -203,6 +211,9 @@ function renderProducts(products) {
 }
 
 
-
+// À la fin de votre fichier
+app.listen(PORT, () => {
+    console.log(`Serveur démarré sur le port ${PORT}`);
+});
 
 

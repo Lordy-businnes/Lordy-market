@@ -3,3 +3,17 @@
     "dotenv": "^17.2.3"
   }
 }
+
+{
+  "name": "lordy-market",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "firebase": "^10.0.0"
+  }
+}
+
+"dependencies": {
+  "express": "^4.18.2",
+  "firebase": "^10.7.1"
+}
